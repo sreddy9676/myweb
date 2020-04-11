@@ -1,20 +1,22 @@
-node{
-    stage('SCM Checkout'){
-      git changelog: false, poll: false, url: 'https://github.com/javahometech/myweb'   
+pipeline{
+    agent any
+    stages{
+        stage("Fortis-Development-server"){
+            when {
+                // This works only in multi branch pipeline
+                branch 'dev-1'
+            }
+            steps{
+                sshPublisher(publishers: [sshPublisherDesc(configName: 'Fortis-Development-server', transfers: [sshTransfer(cleanRemote: false, excludes: '', execCommand: '', execTimeout: 120000, flatten: false, makeEmptyDirs: false, noDefaultExcludes: false, patternSeparator: '[, ]+', remoteDirectory: '/var/www/jenkins', remoteDirectorySDF: false, removePrefix: '', sourceFiles: '**')], usePromotionTimestamp: false, useWorkspaceInPromotion: false, verbose: false)])
+            }
+        }
+        stage("Fortis-Staging-server"){
+            when {
+                branch 'master'
+            }
+            steps{
+                sshPublisher(publishers: [sshPublisherDesc(configName: 'Fortis-Staging-server', transfers: [sshTransfer(cleanRemote: false, excludes: '', execCommand: '', execTimeout: 120000, flatten: false, makeEmptyDirs: false, noDefaultExcludes: false, patternSeparator: '[, ]+', remoteDirectory: '/var/www/jenkins', remoteDirectorySDF: false, removePrefix: '', sourceFiles: '**')], usePromotionTimestamp: false, useWorkspaceInPromotion: false, verbose: false)])
+            }
+        }
     }
-    def mvnHome = tool name: 'maven-3', type: 'maven'
-    stage('Test'){
-         sh "${mvnHome}/bin/mvn test"
-    }
-    stage('Package'){
-         sh "${mvnHome}/bin/mvn package"
-    }
-    stage('Deploy To Tomcat'){
-        sh '/home/ec2-user/scripts/sftp_tomcat.sh'
-    }
-    stage('Email'){
-        mail bcc: '', body: '''Thanks
-Java Home''', cc: '', from: '', replyTo: '', subject: 'MyWeb Deployed', to: 'hari.kammana@gmail.com'
-    }
-    
 }
