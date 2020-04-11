@@ -7,7 +7,7 @@ pipeline{
                 branch 'dev-1'
             }
             steps{
-                echo "Deploying to Dev environment"
+                sshPublisher(publishers: [sshPublisherDesc(configName: 'Fortis-Development-server', transfers: [sshTransfer(cleanRemote: false, excludes: '', execCommand: '', execTimeout: 120000, flatten: false, makeEmptyDirs: false, noDefaultExcludes: false, patternSeparator: '[, ]+', remoteDirectory: '/var/www/jenkins', remoteDirectorySDF: false, removePrefix: '', sourceFiles: '**')], usePromotionTimestamp: false, useWorkspaceInPromotion: false, verbose: false)])
             }
         }
         stage("Fortis-Staging-server"){
@@ -15,7 +15,7 @@ pipeline{
                 branch 'master'
             }
             steps{
-                echo "Deploying to Staging environment"
+                sshPublisher(publishers: [sshPublisherDesc(configName: 'Fortis-Staging-server', transfers: [sshTransfer(cleanRemote: false, excludes: '', execCommand: '', execTimeout: 120000, flatten: false, makeEmptyDirs: false, noDefaultExcludes: false, patternSeparator: '[, ]+', remoteDirectory: '/var/www/jenkins', remoteDirectorySDF: false, removePrefix: '', sourceFiles: '**')], usePromotionTimestamp: false, useWorkspaceInPromotion: false, verbose: false)])
             }
         }
     }
