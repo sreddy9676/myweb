@@ -35,5 +35,8 @@
 		</repository>
   	</distributionManagement>
 
-	
+<properties>
+  <sonar.organization>sreddy9676</sonar.organization>
+  <sonar.host.url>https://sonarcloud.io</sonar.host.url>
+</properties>
 </project>
